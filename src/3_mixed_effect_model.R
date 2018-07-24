@@ -6,11 +6,15 @@ require(optimx)
 # load expression & design matrices
 load('out/expr_and_design.RData')
 
+# load gmt object
+load('out/gmt.RData')
+
 draw.genes <- function(){
   lapply(sign.genes, function(gene){
     # no infection
     lapply(unique(expr.sign[expr.sign$group == '1', ]$rep), function(rep){
       dt <- expr.sign[(expr.sign$group == '1') & (expr.sign$rep == rep), ]
+      setorder(dt, time.ranked)
       lines(x = dt$time.ranked, y = dt[, gene], col = 'sienna2')
     })
     
@@ -18,6 +22,7 @@ draw.genes <- function(){
     # infected
     lapply(unique(expr.sign[expr.sign$group == '2', ]$rep), function(rep){
       dt <- expr.sign[(expr.sign$group == '2') & (expr.sign$rep == rep), ]
+      setorder(dt, time.ranked)
       lines(x = dt$time.ranked, y = dt[, gene], col = 'slateblue4')
     })
   })
@@ -70,11 +75,6 @@ plot(0, 0, xlim = c(1, 5), ylim = c(min(expr.sign[, sign.genes]),
                                     max(expr.sign[, sign.genes])
                                     ), type="n",
      xlab = 'time point', ylab = 'Expression', main = 'Significant genes')
-
-draw.genes()
-
-plot(0, 0, xlim = c(1, 5), ylim = c(min(expr.sign[, sign.genes]), 100), type="n",
-    xlab = 'time point', ylab = 'Expression', main = 'Significant genes')
 
 draw.genes()
 

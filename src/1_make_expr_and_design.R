@@ -57,6 +57,19 @@ as.numeric(design.df[, 'time.h']) -> design.df[, 'time.h']
 as.factor(design.df[, 'rep']) -> design.df[, 'rep']
 as.factor(design.df[, 'group']) -> design.df[, 'group']
 
+# adding zero points to case:
+
+new.sample.names <- c("sample.Mtb.inf.0h.rep1", "sample.Mtb.inf.0h.rep2", 
+                      "sample.Mtb.inf.0h.rep3", "sample.Mtb.inf.0h.rep4")
+add.df <- design.df[design.df$time.h == 0,]
+add.df$group <- 2
+add.df$sample <- new.sample.names
+design.df <- rbind(design.df, add.df)
+add.expr <- expr.data[, c("sample.0h.rep1", "sample.0h.rep2", 
+                         "sample.0h.rep3", "sample.0h.rep4")]
+colnames(add.expr) <- new.sample.names
+expr.data <- cbind(expr.data, add.expr)
+
 identical(colnames(expr.data), design.df$sample)
 # save everything
 
